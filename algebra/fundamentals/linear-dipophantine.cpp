@@ -8,12 +8,16 @@ using namespace std;
 
 // represents a solution for the equation ax+by=c
 struct EquationSolution {
-    int x;
-    int y;
-    int c;
+    int x = 0;
+    int y = 0;
+    int c = 0;
 
     bool solExists = true;
     void print(int a, int b) {
+        if (!solExists) {
+            cout << "No solution exists" << endl;
+            return;
+        }
         cout << a << " * " << x << " + " << b << " * " << y << " = " << c
              << endl;
         cout << a * x + b * y << " " << c;
@@ -39,11 +43,15 @@ EquationSolution extendedEuclid(int a, int b) {
 EquationSolution linearDipophantine(int a, int b, int c) {
     EquationSolution sol;
     sol.c = c;
+
     EquationSolution s = extendedEuclid(a, b);
 
     // s.c is gcd of a,b
     // s.x and s.y satisfy the equation (s.x)*a + (s.y)*b= gcd(a,b)
     cout << "GCD " << s.c << endl;
+
+    // if c is divisible by gcd, only then does solution exist
+    // if not (c%s.c will be non-zero), solution doesn't exist
     if (c % s.c) {
         sol.solExists = false;
         return sol;
@@ -64,6 +72,7 @@ int main() {
     cin >> a >> b >> c;
     EquationSolution s = linearDipophantine(a, b, c);
     s.print(a, b);
-    // All solutions of the kind x = x+k*(b/gcd), y = y-k*(a/gcd) are valid.
+    // All solutions of the kind x = x+k*(b/gcd), y = y-k*(a/gcd) are valid,
+    // where k is the iterator.
     return 0;
 }
